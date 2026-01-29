@@ -283,7 +283,7 @@
         <h2>❤️ Condição Física & Espiritual</h2>
         <div class="vitals-grid">
             <div class="field vital-box">
-                <label>Pontos de Vida (Máx/Atual)</label>
+                <label>Pontos de Vida </label>
                 <input type="text" id="hp_total">
             </div>
             <div class="field vital-box">
@@ -320,4 +320,118 @@
             </div>
             <div class="field">
                 <label>Espaços de Magia (Slots):</label>
-                <textarea id="slots" style="min-height:
+                <textarea id="slots" style="min-height: 100px;" placeholder="I: [ ][ ][ ][ ]  II: [ ][ ]"></textarea>
+            </div>
+        </div>
+        <div class="field">
+            <label>Magias Preparadas:</label>
+            <textarea id="magias"></textarea>
+        </div>
+
+        <h2>⚔️ Armamentos & Relíquias</h2>
+        <div class="row">
+            <div class="field">
+                <label>Ataques & Armas:</label>
+                <textarea id="armas" style="min-height: 120px;"></textarea>
+            </div>
+            <div class="field">
+                <label>Inventário Sagrado (e mundano):</label>
+                <textarea id="inventario"></textarea>
+            </div>
+        </div>
+
+        <h2>📝 Dogmas & Talentos</h2>
+        <div class="field">
+            <label>Habilidades de Domínio & Talentos:</label>
+            <textarea id="habilidades"></textarea>
+        </div>
+
+        <div class="control-panel">
+            <button class="btn" onclick="downloadSheet()">💾 Gravar no Arquivo</button>
+            <button class="btn" onclick="document.getElementById('fileInput').click()">📂 Abrir Grimório</button>
+            <input type="file" id="fileInput" style="display: none;" onchange="loadSheet(this)">
+            <button class="btn" onclick="resetSheet()" style="border-color: #a82525; color: #a82525;">⚠️ Apagar Tudo</button>
+        </div>
+
+        <div class="footer">
+            "Que a luz (ou as sombras) guiem seus passos." - Arquivos de Varn V3.0 (Gothic Ed.)
+            <br><span id="status-msg" style="color: #d4af37;"></span>
+        </div>
+    </div>
+
+    <script>
+        const inputs = document.querySelectorAll('input, textarea');
+        const statusMsg = document.getElementById('status-msg');
+
+        function loadFromBrowser() {
+            inputs.forEach(input => {
+                if (input.id) {
+                    const savedValue = localStorage.getItem('aurora_cleric_' + input.id); // Prefixo diferente para não misturar com a outra ficha
+                    if (savedValue !== null) input.value = savedValue;
+                }
+            });
+        }
+
+        inputs.forEach(input => {
+            input.addEventListener('input', () => {
+                if (input.id) {
+                    localStorage.setItem('aurora_cleric_' + input.id, input.value);
+                    showStatus("Salvando preces...");
+                }
+            });
+        });
+
+        function showStatus(msg) {
+            statusMsg.innerText = msg;
+            setTimeout(() => { statusMsg.innerText = ""; }, 1000);
+        }
+
+        function downloadSheet() {
+            let data = {};
+            inputs.forEach(input => { if (input.id) data[input.id] = input.value; });
+            const nomeChar = document.getElementById('nome_char').value || "Cleriga";
+            const jsonStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([jsonStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${nomeChar}_Grimorio.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function loadSheet(inputElement) {
+            const file = inputElement.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    for (const key in data) {
+                        const el = document.getElementById(key);
+                        if (el) {
+                            el.value = data[key];
+                            localStorage.setItem('aurora_cleric_' + key, data[key]);
+                        }
+                    }
+                    alert("As escrituras foram restauradas.");
+                } catch (err) { alert("Erro ao ler o pergaminho."); }
+            };
+            reader.readAsText(file);
+            inputElement.value = '';
+        }
+
+        function resetSheet() {
+            if (confirm("Deseja apagar todos os registros sagrados?")) {
+                inputs.forEach(input => {
+                    input.value = "";
+                    if (input.type === 'number') input.value = "0";
+                    localStorage.removeItem('aurora_cleric_' + input.id);
+                });
+            }
+        }
+
+        loadFromBrowser();
+    </script>
+</body>
+</html>
