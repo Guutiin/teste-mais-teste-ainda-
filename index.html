@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grimório da Clériga - Aurora de Ferro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Crimson Text', serif;
+            background-color: #0a0a0a; /* Fundo quase preto */
+            background-image: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+            color: #c0c0c0;
+            display: flex;
+            justify-content: center;
+            padding: 30px 10px;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .sheet-container {
+            background-color: #161616;
+            width: 100%;
+            max-width: 950px;
+            padding: 40px;
+            border: 1px solid #333;
+            /* Borda Dupla estilo Grimório */
+            outline: 4px double #5c4528; 
+            outline-offset: -15px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.9);
+            position: relative;
+        }
+
+        /* Detalhe decorativo nos cantos (simulado com bordas) */
+        .sheet-container::before {
+            content: "";
+            position: absolute;
+            top: -5px; left: -5px; right: -5px; bottom: -5px;
+            border: 1px solid #2a2a2a;
+            z-index: -1;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            color: #a82525; /* Vermelho Sangue */
+            text-shadow: 2px 2px 4px #000;
+            border-bottom: 2px solid #5c4528;
+            padding-bottom: 15px;
+            font-weight: 700;
+            font-size: 2.2em;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            margin-top: 10px;
+        }
+
+        h2 {
+            font-family: 'Cinzel', serif;
+            color: #d4af37; /* Dourado Envelhecido */
+            border-bottom: 1px solid #444;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Pequeno ornamento antes do H2 */
+        h2::before {
+            content: "♦";
+            margin-right: 10px;
+            color: #a82525;
+            font-size: 0.8em;
+        }
+
+        .row {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .field {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+        }
+
+        label {
+            font-family: 'Cinzel', serif;
+            font-size: 0.8em;
+            color: #888;
+            margin-bottom: 8px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        input, textarea {
+            background: #0f0f0f;
+            border: 1px solid #3a3a3a;
+            color: #e0e0e0;
+            padding: 12px;
+            font-family: 'Crimson Text', serif; /* Fonte de escrita a mão */
+            font-size: 1.1em; /* Um pouco maior para leitura fácil */
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5);
+        }
+
+        input:focus, textarea:focus {
+            border-color: #a82525; /* Foco vermelho */
+            box-shadow: 0 0 8px rgba(168, 37, 37, 0.3);
+            background: #1a1a1a;
+        }
+
+        /* --- ESTILOS ESPECÍFICOS --- */
+
+        /* Atributos em Caixas Góticas */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 15px;
+            text-align: center;
+        }
+        .stat-box {
+            border: 1px solid #5c4528;
+            padding: 5px;
+            background: #0d0d0d;
+        }
+        .stat-box label {
+            display: block;
+            color: #d4af37;
+            margin-bottom: 5px;
+        }
+        .stat-box input {
+            width: 100%;
+            text-align: center;
+            font-size: 1.6em;
+            font-weight: bold;
+            border: none;
+            background: transparent;
+            box-shadow: none;
+            color: #fff;
+        }
+
+        /* Vitais */
+        .vitals-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 20px;
+        }
+        .vital-box input {
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            border: 1px solid #5c4528; /* Borda dourada */
+        }
+
+        /* --- O CAMPO ESPECIAL DO CLÉRIGO --- */
+        .divinity-container {
+            border: 1px solid #a82525; /* Borda Vermelha */
+            background-color: rgba(168, 37, 37, 0.05); /* Fundo avermelhado sutil */
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        .divinity-desc {
+            flex: 3;
+        }
+        .divinity-uses {
+            flex: 1;
+            text-align: center;
+            background: #000;
+            padding: 10px;
+            border: 1px solid #a82525;
+        }
+        .divinity-uses input[type="number"] {
+            font-size: 2em;
+            text-align: center;
+            border: none;
+            background: transparent;
+            width: 100%;
+            color: #ff4d4d;
+        }
+
+        /* Textareas */
+        textarea {
+            resize: vertical;
+            min-height: 150px;
+            line-height: 1.5;
+            background-image: linear-gradient(#1a1a1a 1px, transparent 1px);
+            background-size: 100% 32px; /* Linhas de caderno */
+        }
+
+        /* Botões */
+        .control-panel {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .btn {
+            padding: 12px 25px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            border: 1px solid #5c4528;
+            color: #d4af37;
+            background: #0f0f0f;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+        .btn:hover {
+            background: #5c4528;
+            color: #000;
+            box-shadow: 0 0 15px #5c4528;
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.8em;
+            font-style: italic;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(3, 1fr); }
+            .vitals-grid { grid-template-columns: repeat(2, 1fr); }
+            .divinity-container { flex-direction: column; }
+            .sheet-container { outline: none; padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sheet-container">
+        <h1>Grimório de Fé: Aurora de Ferro</h1>
+        
+        <div class="row">
+            <div class="field">
+                <label>Nome da Devota:</label>
+                <input type="text" id="nome_char">
+            </div>
+            <div class="field">
+                <label>Jogador(a):</label>
+                <input type="text" id="nome_player">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="field">
+                <label>Domínio & Divindade:</label>
+                <input type="text" id="classe" placeholder="Ex: Clériga da Vida (Ilmater)">
+            </div>
+            <div class="field">
+                <label>Nível / XP:</label>
+                <input type="text" id="nivel">
+            </div>
+        </div>
+
+        <h2>📊 Atributos Sagrados</h2>
+        <div class="stats-grid">
+            <div class="stat-box"><label>FOR</label><input type="number" id="attr_for" value="0"></div>
+            <div class="stat-box"><label>DES</label><input type="number" id="attr_des" value="0"></div>
+            <div class="stat-box"><label>CON</label><input type="number" id="attr_con" value="0"></div>
+            <div class="stat-box"><label>INT</label><input type="number" id="attr_int" value="0"></div>
+            <div class="stat-box"><label>SAB</label><input type="number" id="attr_sab" value="0"></div>
+            <div class="stat-box"><label>CAR</label><input type="number" id="attr_car" value="0"></div>
+        </div>
+
+        <h2>❤️ Condição Física & Espiritual</h2>
+        <div class="vitals-grid">
+            <div class="field vital-box">
+                <label>Pontos de Vida (Máx/Atual)</label>
+                <input type="text" id="hp_total">
+            </div>
+            <div class="field vital-box">
+                <label>Vida Temporária</label>
+                <input type="number" id="hp_temp" value="0">
+            </div>
+            <div class="field vital-box">
+                <label>Classe de Armadura</label>
+                <input type="number" id="ca">
+            </div>
+            <div class="field vital-box">
+                <label>Iniciativa</label>
+                <input type="number" id="iniciativa" value="0">
+            </div>
+        </div>
+
+        <h2>⚜️ Canalizar Divindade</h2>
+        <div class="divinity-container">
+            <div class="divinity-desc field">
+                <label>Efeito do Canalizar Divindade:</label>
+                <textarea id="canalizar_desc" style="min-height: 80px;" placeholder="Descreva aqui o poder especial do seu Deus..."></textarea>
+            </div>
+            <div class="divinity-uses">
+                <label>Usos / Descanso</label>
+                <input type="number" id="canalizar_uses" value="1">
+            </div>
+        </div>
+
+        <h2>✨ Milagres & Orações</h2>
+        <div class="row">
+            <div class="field">
+                <label>Truques (Preces Menores):</label>
+                <textarea id="truques" style="min-height: 100px;"></textarea>
+            </div>
+            <div class="field">
+                <label>Espaços de Magia (Slots):</label>
+                <textarea id="slots" style="min-height:
